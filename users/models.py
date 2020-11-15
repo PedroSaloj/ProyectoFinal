@@ -13,6 +13,7 @@ class UserProfile(models.Model):
         blank=True,
         null=True
     )
+    age = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 

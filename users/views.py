@@ -4,7 +4,7 @@
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from .models import Ticket
+from .models import Ticket, UserProfile
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
 from .forms import TicketForm
@@ -22,8 +22,24 @@ def logon(request):
                 return render(request, 'login.html', {'error' : "Invalid username or password"})
     return render(request,'login.html')
 
-def signup(request):
+def signup(request, id=None):
     if request.method == 'POST':
+        if(id != 0):
+            user = User.objects.get(id=id)
+            profile = UserProfile.objects.get(user=user)
+            user.username = request.POST['username']
+            user.email = request.POST['email']
+            if request.POST['password'] != request.POST['password2']:
+                return render(request, 'register.html', {'error' : "Las contraseñas son diferentes"})
+            if request.POST['password'] != '':
+                user.set_password(request.POST['password'])
+            user.save()
+            profile.age = request.POST["age"]
+            if request.FILES:
+                profile.userImage = request.FILES['image']
+            profile.save()
+            return redirect('homepage')
+        else:
             username = request.POST['username']
             email = request.POST['email']
             password = request.POST['password']
@@ -32,12 +48,28 @@ def signup(request):
             if password != password2:
                 return render(request, 'register.html', {'error' : "Las contraseñas son diferentes"})
             user = User.objects.create_user(username, email=email, password=password)
-            user.age = age
-            user.save()
+            userprofile = UserProfile(
+                user=user,
+                age=request.POST['age'],
+                userImage = request.FILES['image']
+            )
+            userprofile.save()
             return render(request, 'login.html', {'error' : "Please, login"})
-
-    return render(request,'register.html')
-    return render(request,'edit.html')
+    else:
+        if(id is not None):
+            user = User.objects.get(id=id)
+            profile = UserProfile.objects.get(user=user)
+            data = {
+            'username': user.username,
+            'email': user.email,
+            'age': profile.age,
+            'id': id
+            }
+        else:
+            data = {
+                'id': 0
+            }
+        return render(request,'edit.html',{'user':data})
 
 def logout_view(request):
     logout(request)

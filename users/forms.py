@@ -6,3 +6,4 @@ class TicketForm(ModelForm):
     class Meta:
         model = Ticket
         fields = ['marca','modelo','codigo','descripcion','serie','estado']
+

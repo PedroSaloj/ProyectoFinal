@@ -75,7 +75,7 @@
 				</div>
 				<div class="d-flex justify-content-center form_container">
 
-					<form method="POST" action="{% url 'register' %}">
+					<form method="POST" action="{% url 'register' %}" enctype="multipart/form-data">
                         {% csrf_token %}
 						<div class="input-group mb-3">
 							<div class="input-group-append">
@@ -108,6 +108,13 @@
 								<span class="input-group-text"><i class="fas fa-award"></i></span>
 							</div>
 							<input type="number" name="age">
+						</div>
+
+						<div class="input-group mb-2">
+							<div class="input-group-append">
+								<span class="input-group-text"><i class="fas fa-camera"></i></span>
+							</div>
+							<input type="file" name="image">
 						</div>
 
 				   		<div class="d-flex justify-content-center mt-3 login_container">

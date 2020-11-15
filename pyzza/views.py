@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 
 @login_required
 def homepage(request):
-    users = User.objects.order_by('-username')
+    users = User.objects.order_by('-username').select_related()
     return render(request, 'index.html', {'users': users})
 
 
