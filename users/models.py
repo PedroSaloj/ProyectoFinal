@@ -18,3 +18,31 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class Ticket(models.Model):
+    INGRESADO = 'I'
+    ENPROCESO = 'P'
+    REPARADO = 'R'
+    ENTREGADO = 'E'
+    OPCIONES_ESTADO = [
+        (INGRESADO,'Ingresado'),
+        (ENPROCESO, 'En Proceso'),
+        (REPARADO, 'Reparado'),
+        (ENTREGADO, 'Entregado')
+    ]
+    marca = models.CharField(max_length=25)
+    modelo = models.CharField(max_length=25)
+    codigo = models.CharField(max_length=25)
+    descripcion = models.TextField(max_length = 1000)
+    serie = models.CharField(max_length=25)
+    estado = models.CharField(
+        max_length=1,
+        choices = OPCIONES_ESTADO,
+        default = INGRESADO
+    )
+    creado = models.DateTimeField(auto_now_add=True)
+    modificado = models.DateTimeField(auto_now=True)
+
+    def is_upperclass(self):
+        return True
