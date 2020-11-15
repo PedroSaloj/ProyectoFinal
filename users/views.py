@@ -4,8 +4,10 @@
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from .models import Ticket
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
+from .forms import TicketForm
 
 def logon(request):
     if request.method == 'POST':
@@ -40,3 +42,41 @@ def signup(request):
 def logout_view(request):
     logout(request)
     return redirect("logon")
+
+def ticket_list(request):
+    tickets = Ticket.objects.order_by('-id')
+    return render(request, 'Tickets/index.html', {'tickets': tickets})
+
+def ticket_edit(request, id=None):
+    if request.method == "POST":
+        if(id != 0):
+            ticket = Ticket.objects.get(id=id)
+        else:
+            ticket = Ticket()
+        
+        ticket.marca=request.POST['marca']
+        ticket.modelo = request.POST['modelo']
+        ticket.serie = request.POST['serie']
+        ticket.codigo = request.POST['codigo']
+        ticket.estado = request.POST['estado']
+        ticket.descripcion = request.POST['descripcion']
+        
+        
+        ticket.save()
+        return redirect('ticketlist')
+    else:
+        if(id is not None):
+            ticket = Ticket.objects.get(id=id)
+        else:
+            ticket = Ticket()
+            id=0
+        data = {
+            'marca': ticket.marca,
+            'modelo': ticket.modelo,
+            'serie': ticket.serie,
+            'codigo': ticket.codigo,
+            'estado': ticket.estado,
+            'descripcion': ticket.descripcion
+        }
+        form = TicketForm(data)
+        return render(request,'Tickets/edit.html',{'form':form, 'id':id})

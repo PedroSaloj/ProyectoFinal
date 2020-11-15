@@ -15,4 +15,7 @@ urlpatterns = [
     path('register/', users.signup, name = "register"),
     path('logout/', users.logout_view, name = "logout"),
     path('edit/', users.signup , name = "edit"),
+    path('tickets/', users.ticket_list, name="ticketlist"),
+    path('tickets/edit/', users.ticket_edit, name="ticket_edit"),
+    path('tickets/edit/<int:id>', users.ticket_edit, name="ticket_edit")
 ] + static(settings.MEDIA_URL, document_root =settings.MEDIA_ROOT)
